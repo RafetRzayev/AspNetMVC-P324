@@ -75,7 +75,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    @foreach (var product in products)
+
+                    @await Component.InvokeAsync("Product")
+                    @*@foreach (var product in products)
                     {
                     <div class="col-sm-6 col-md-4 col-lg-3 mt-3">
                         <div class="product-item text-center" data-id="@product.Category.Name.ToLower()">
@@ -93,7 +95,7 @@
                             </div>
                         </div>
                     </div>
-                    }
+                    }*@
                   </div>
             </div>
         </section>

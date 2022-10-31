@@ -11,7 +11,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="~/owlcarousel/owl.carousel.min.css">
     <link rel="stylesheet" href="~/owlcarousel/owl.theme.default.min.css">
-    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
     <title>Fiorello &#8211; A Flower Shop and Florist WooCommerce Theme</title>
 </head>
 
@@ -373,12 +373,7 @@
                 <div class=" col-lg-4 text-center">
                     <img src="img/footer-bottom-1.png" class="fluid" alt="">
                 </div>
-                <div class=" col-lg-4 text-center text-lg-right mt-3 mt-lg-0">
-                    <a class="text-black-50 mr-5"
-                        href="https://www.linkedin.com/in/bakhtiyar-shamilzada-145159185/">LINKEDIN</a
-                        class="text-black-50">
-                    <a class="text-black-50" href="https://www.facebook.com/shamilzada.bakhtiyar">FACEBOOK</a>
-                </div>
+                @await Component.InvokeAsync("SosialMedia")
             </div>
         </div>
     </footer>
@@ -397,7 +392,7 @@
         crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/e5e249fce2.js" crossorigin="anonymous"></script>
     <script src="~/owlcarousel/owl.carousel.min.js"></script>
-    <script src="~/js/script.js"></script>
+    <script src="~/js/script.js" asp-append-version="true"></script>
 </body>
 
 </html>

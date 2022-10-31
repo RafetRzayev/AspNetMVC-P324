@@ -1,6 +1,21 @@
 $(document).ready(function () {
 
-    // HEADER
+    var skip = 4;
+    $(document).on('click', '#loadMore', function () {
+        $.ajax({
+            method:"GET",
+            url: "/products/partial?skip="+skip,
+            success: function (html) {
+                $("#productRows").append(html);
+                skip += 4;
+
+                var productCount = $("#productCount").val();
+
+                if (skip >= productCount)
+                    $("#loadMore").remove();
+            }
+        });
+    })
 
     $(document).on('click', '#search', function () {
         $(this).next().toggle();

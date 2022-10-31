@@ -14,5 +14,6 @@ namespace AspNetMVC_P324.DAL
         public DbSet<SliderImage> SliderImages { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<SosialMedia> SosialMedias { get; set; }
     }
 }
