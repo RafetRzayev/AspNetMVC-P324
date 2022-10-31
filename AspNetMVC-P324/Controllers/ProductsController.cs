@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspNetMVC_P324.Controllers
 {
-    public class ProductController : Controller
+    public class ProductsController : Controller
     {
         private readonly AppDbContext _dbContext;
 
-        public ProductController(AppDbContext dbContext)
+        public ProductsController(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
