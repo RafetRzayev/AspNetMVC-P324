@@ -21,10 +21,6 @@ $(document).ready(function () {
         $(this).next().toggle();
     })
 
-    $(document).on('click', '#search', function () {
-        $(this).next().toggle();
-    })
-
     $(document).on('click', '#mobile-navbar-close', function () {
         $(this).parent().removeClass("active");
 

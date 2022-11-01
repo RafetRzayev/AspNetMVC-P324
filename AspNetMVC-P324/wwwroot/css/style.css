@@ -466,7 +466,7 @@ header .mobile-navbar.active {
   font-family: Montserrat, sans-serif;
 }
 
-#subscribe .content ::-ms-input-placeholder {
+#subscribe .content :-ms-input-placeholder {
   font-size: 12px;
   font-family: Montserrat, sans-serif;
 }
