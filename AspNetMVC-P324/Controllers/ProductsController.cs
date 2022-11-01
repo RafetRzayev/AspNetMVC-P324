@@ -39,7 +39,9 @@ namespace AspNetMVC_P324.Controllers
 
         public IActionResult Details(int? id)
         {
-            if (id == null)
+            var viewm = new ViewResult();
+            viewm.ViewName = "Index"
+;            if (id == null)
                 return NotFound();
 
             var product = _dbContext.Products.SingleOrDefault(x => x.Id == id);

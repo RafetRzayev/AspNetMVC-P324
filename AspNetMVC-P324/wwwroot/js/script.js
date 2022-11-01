@@ -17,9 +17,24 @@ $(document).ready(function () {
         });
     })
 
+    $(document).on('keyup', '#input-search', function () {
+        var searchedProduct = $(this).val();
+        $("#searchedProducts li").slice(1).remove();
+        $.ajax({
+            method: "GET",
+            url: "/home/search?searchText=" + searchedProduct,
+            success: function (html) {
+                console.log(html);
+
+                $("#searchedProducts").append(html);
+            }
+        });
+    })
+
     $(document).on('click', '#search', function () {
         $(this).next().toggle();
     })
+
 
     $(document).on('click', '#mobile-navbar-close', function () {
         $(this).parent().removeClass("active");
