@@ -37,14 +37,14 @@ namespace AspNetMVC_P324.Controllers
             return View(products);
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var viewm = new ViewResult();
-            viewm.ViewName = "Index"
-;            if (id == null)
+            var viewm = new ViewResult { ViewName = "Index" };
+
+            if (id == null)
                 return NotFound();
 
-            var product = _dbContext.Products.SingleOrDefault(x => x.Id == id);
+            var product = await _dbContext.Products.SingleOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
                 return NotFound();
@@ -52,12 +52,12 @@ namespace AspNetMVC_P324.Controllers
             return View(product);
         }
 
-        public IActionResult Partial(int skip)
+        public async Task<IActionResult> Partial(int skip)
         {
             if (skip >= _productCount)
                 return BadRequest();
 
-            var products = _dbContext.Products.Include(x => x.Category).Skip(skip).Take(4).ToList();
+            var products = await _dbContext.Products.Include(x => x.Category).Skip(skip).Take(4).ToListAsync();
 
             return PartialView("_ProductPartial", products);
         }

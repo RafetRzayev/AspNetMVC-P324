@@ -16,16 +16,16 @@ namespace AspNetMVC_P324.Controllers
             _dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
             HttpContext.Session.SetString("session", "Hello");
             Response.Cookies.Append("cookie", "P324", new CookieOptions { Expires = DateTimeOffset.Now.AddHours(1) });
 
-            var sliderImages = _dbContext.SliderImages.ToList();
-            var slider = _dbContext.Sliders.SingleOrDefault();
-            var categories = _dbContext.Categories.ToList();
-            var products = _dbContext.Products.ToList();
+            var sliderImages = await _dbContext.SliderImages.ToListAsync();
+            var slider = await _dbContext.Sliders.SingleOrDefaultAsync();
+            var categories = await _dbContext.Categories.ToListAsync();
+            var products = await _dbContext.Products.ToListAsync();
 
             var homeViewModel = new HomeViewModel
             {
@@ -39,12 +39,15 @@ namespace AspNetMVC_P324.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search(string searchText)
+        public async Task<IActionResult> Search(string searchText)
         {
             if (string.IsNullOrEmpty(searchText))
                 return RedirectToAction(nameof(Index));
 
-            var products = _dbContext.Products.Where(x=>x.Name.ToLower().Contains(searchText.ToLower())).ToList();
+            var products = await _dbContext.Products
+                .Where(x => x.Name.ToLower()
+                .Contains(searchText.ToLower()))
+                .ToListAsync();
 
             return PartialView("_SearchedProductPartial", products);
         }
@@ -64,9 +67,9 @@ namespace AspNetMVC_P324.Controllers
             return Json(basketViewModels);
         }
 
-        public IActionResult AddToBasket(int id)
+        public async Task<IActionResult> AddToBasket(int id)
         {
-            var product = _dbContext.Products.Include(x => x.Category).SingleOrDefault(x => x.Id == id);
+            var product = await _dbContext.Products.Include(x => x.Category).SingleOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
                 return NotFound();
@@ -74,6 +77,7 @@ namespace AspNetMVC_P324.Controllers
             var basketJson = Request.Cookies["basket"];
 
             List<BasketViewModel> existBasketViewModels = null;
+
             if (basketJson != null)
                 existBasketViewModels = JsonConvert.DeserializeObject<List<BasketViewModel>>(basketJson);
 
@@ -94,31 +98,27 @@ namespace AspNetMVC_P324.Controllers
                         Count = 1
                     });
                 }
-
             }
             else
             {
-                existBasketViewModels = new List<BasketViewModel>();
-
-                existBasketViewModels.Add(new BasketViewModel
+                existBasketViewModels = new List<BasketViewModel>
                 {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Price = product.Price,
-                    ImageUrl = product.ImageUrl,
-                    Category = product.Category,
-                    Count = 1
-                });
-
+                    new BasketViewModel
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Price = product.Price,
+                        ImageUrl = product.ImageUrl,
+                        Category = product.Category,
+                        Count = 1
+                    }
+                };
             }
 
-
-
             var basketViewModelJson = JsonConvert.SerializeObject(existBasketViewModels, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-            Response.Cookies.Append("basket",basketViewModelJson);
+            Response.Cookies.Append("basket", basketViewModelJson);
 
             return RedirectToAction(nameof(Basket));
-
         }
     }
 }
