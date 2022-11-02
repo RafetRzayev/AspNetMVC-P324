@@ -52,7 +52,7 @@ namespace AspNetMVC_P324.Controllers
             return PartialView("_SearchedProductPartial", products);
         }
 
-        public IActionResult Basket()
+        public async  Task<IActionResult> Basket()
         {
             //var session = HttpContext.Session.GetString("session");
             //var cookie = Request.Cookies["cookie"];
@@ -63,6 +63,18 @@ namespace AspNetMVC_P324.Controllers
             if (basketJson == null) return BadRequest();
 
             var basketViewModels = JsonConvert.DeserializeObject<List<BasketViewModel>>(basketJson);
+
+            foreach (var basketViewModel in basketViewModels)
+            {
+                var product = await _dbContext.Products.Include(x => x.Category).SingleOrDefaultAsync(x => x.Id == basketViewModel.Id);
+
+                if (product != null)
+                {
+                    basketViewModel.Price = product.Price;
+                    basketViewModel.Category = product.Category;
+                }
+
+            }
 
             return Json(basketViewModels);
         }
@@ -118,7 +130,7 @@ namespace AspNetMVC_P324.Controllers
             var basketViewModelJson = JsonConvert.SerializeObject(existBasketViewModels, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
             Response.Cookies.Append("basket", basketViewModelJson);
 
-            return RedirectToAction(nameof(Basket));
+            return RedirectToAction(nameof(Index));
         }
     }
 }

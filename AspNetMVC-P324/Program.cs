@@ -24,9 +24,18 @@ namespace AspNetMVC_P324
             app.UseRouting();
 
             app.UseSession();
-            app.MapControllerRoute(
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+
+                app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+            
 
             app.Run();
         }
