@@ -188,9 +188,9 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/forms/basic_elements.html">
+                        <a class="nav-link" asp-controller="SlideImage" asp-action="index">
                             <i class="mdi mdi-view-headline menu-icon"></i>
-                            <span class="menu-title">Form elements</span>
+                            <span class="menu-title">Slide images</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -245,7 +245,10 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="~/admin/vendors/base/vendor.bundle.base.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="~/js/script.js" asp-append-version="true"></script>
     <!-- endinject -->
     <!-- Plugin js for this page-->
     <script src="~/admin/vendors/chart.js/Chart.min.js"></script>
@@ -264,8 +267,12 @@
     <script src="~/admin/js/dataTables.bootstrap4.js"></script>
     <!-- End custom js for this page-->
     <script src="~/admin/js/jquery.cookie.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/admin/vendors/base/vendor.bundle.base.js"></script>
+
+    
+
+    @await RenderSectionAsync("Scripts",false)
+
 </body>
 
 </html>

@@ -31,6 +31,31 @@ $(document).ready(function () {
         });
     })
 
+    $(document).on('click', '#add-to-basket', function () {
+        var id = $(this).val();
+        $.ajax({
+            method: "GET",
+            url: "/home/addtobasket?id=" + id,
+            success: function () {
+            },
+            error: function () {
+                console.log("error happened");
+            }
+        });
+    })
+
+    $(document).on('click', '#delete-category', function () {
+        var id = $(this).val();
+        $.ajax({
+            method: "POST",
+            url: "/adminpanel/category/delete?id=" + id,
+            success: function () {
+                console.log("success");
+            }
+        });
+    })
+
+
     $(document).on('click', '#search', function () {
         $(this).next().toggle();
     })

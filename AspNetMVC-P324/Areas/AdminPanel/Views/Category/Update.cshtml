@@ -1,10 +1,10 @@
-﻿@model CategoryCreateModel
+﻿@model CategoryUpdateModel
 <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title"> Create category</h4>
-                <form class="forms-sample" method="post" asp-action="Create">
+                <form class="forms-sample" method="post" asp-action="Update">
                     <div class="form-group">
                         <label asp-for="Name">Name</label>
                         <input asp-for="Name" class="form-control" placeholder="Name">
@@ -12,7 +12,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Description">Description</label>
-                        <textarea asp-for="Description" id="description" class="form-control" placeholder="Description"></textarea>
+                        <input asp-for="Description" class="form-control" placeholder="Description">
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
@@ -22,16 +22,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts{
-    <partial name="_ValidationPartial"/>
-    <script src="https://cdn.ckeditor.com/ckeditor5/35.2.1/classic/ckeditor.js"></script>
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#description'))
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
-}
-

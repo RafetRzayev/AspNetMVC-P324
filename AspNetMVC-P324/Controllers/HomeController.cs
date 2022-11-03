@@ -76,11 +76,12 @@ namespace AspNetMVC_P324.Controllers
 
             }
 
-            return Json(basketViewModels);
+            return View(basketViewModels);
         }
 
         public async Task<IActionResult> AddToBasket(int id)
         {
+            throw new Exception();
             var product = await _dbContext.Products.Include(x => x.Category).SingleOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
@@ -130,7 +131,7 @@ namespace AspNetMVC_P324.Controllers
             var basketViewModelJson = JsonConvert.SerializeObject(existBasketViewModels, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
             Response.Cookies.Append("basket", basketViewModelJson);
 
-            return RedirectToAction(nameof(Index));
+            return NoContent();
         }
     }
 }

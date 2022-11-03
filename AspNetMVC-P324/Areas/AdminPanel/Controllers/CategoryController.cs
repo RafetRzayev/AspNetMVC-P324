@@ -73,5 +73,70 @@ namespace AspNetMVC_P324.Areas.AdminPanel.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Update(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var category = await _dbContext.Categories.FindAsync(id);
+
+            if (category == null) return NotFound();
+
+            return View(new CategoryUpdateModel
+            {
+                Name = category.Name,
+                Description = category.Description
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int? id, CategoryUpdateModel model)
+        {
+            if (id == null) return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var category = await _dbContext.Categories.FindAsync(id);
+
+            if (category.Id != id)
+                return BadRequest();
+
+            if (category == null) return NotFound();
+
+            var isExistName = await _dbContext.Categories.AnyAsync(c => c.Name.ToLower() == model.Name.ToLower() && c.Id != id);
+
+            if (isExistName)
+            {
+                ModelState.AddModelError("Name", "Ad tekrarlana bilmez");
+                return View();
+            }
+
+            category.Name = model.Name;
+            category.Description = model.Description;
+
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var category = await _dbContext.Categories.FindAsync(id);
+
+            if (category == null) return NotFound();
+
+            _dbContext.Categories.Remove(category);
+
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
