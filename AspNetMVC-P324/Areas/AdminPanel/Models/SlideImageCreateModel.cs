@@ -1,4 +1,7 @@
-﻿namespace AspNetMVC_P324.Areas.AdminPanel.Models
+﻿using Microsoft.Build.Framework;
+using System.ComponentModel.DataAnnotations;
+
+namespace AspNetMVC_P324.Areas.AdminPanel.Models
 {
     public class SlideImageCreateModel
     {

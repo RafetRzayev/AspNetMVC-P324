@@ -1,3 +1,4 @@
+using AspNetMVC_P324.Areas.AdminPanel.Data;
 using AspNetMVC_P324.DAL;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -16,6 +17,8 @@ namespace AspNetMVC_P324
                     opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddSession(opt => opt.IdleTimeout = TimeSpan.FromMinutes(10));
+
+            Constants.RootPath = builder.Environment.WebRootPath;
 
             var app = builder.Build();
 
