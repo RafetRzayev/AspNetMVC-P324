@@ -1,9 +1,11 @@
 ﻿using AspNetMVC_P324.Models.Entities;
+using AspNetMVC_P324.Models.IdentityModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNetMVC_P324.DAL
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

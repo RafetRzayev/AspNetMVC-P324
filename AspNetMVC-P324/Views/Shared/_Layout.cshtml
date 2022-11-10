@@ -131,7 +131,13 @@
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Elements</a>
+                                    @if(User.Identity.IsAuthenticated){
+                                        <a class="nav-link">@User.Identity.Name</a>
+                                        <a asp-controller="account" asp-action="logout" class="nav-link">Logout</a>
+                                    }
+                                    else{
+                                        <a asp-controller="account" asp-action="register"  class="nav-link">Register</a>
+                                    }
                                     <ul class="list-unstyled py-3 elements">
                                         <li class=""><a class="px-1" href="">Element 1</a></li>
                                         <li class=""><a class="px-1" href="">Element 2</a></li>
