@@ -2,6 +2,7 @@
 using AspNetMVC_P324.Areas.AdminPanel.Models;
 using AspNetMVC_P324.DAL;
 using AspNetMVC_P324.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;

@@ -10,21 +10,25 @@ namespace AspNetMVC_P324
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
            
             builder.Services.AddDbContext<AppDbContext>(
-                    opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                    opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+                    builder =>
+                    {
+                        builder.MigrationsAssembly("AspNetMVC-P324");
+                    }));
 
             builder.Services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Lockout.MaxFailedAccessAttempts = 3;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
 
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
 
                 options.User.RequireUniqueEmail = true;
 
@@ -40,6 +44,16 @@ namespace AspNetMVC_P324
             Constants.RootPath = builder.Environment.WebRootPath;
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                var dataInit = new DataInitializer(dbContext, userManager, roleManager);
+                await dataInit.SeedData();
+            }
 
             app.UseStaticFiles();
 
@@ -62,7 +76,7 @@ namespace AspNetMVC_P324
             });
             
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

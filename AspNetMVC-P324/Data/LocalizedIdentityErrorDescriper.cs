@@ -12,5 +12,14 @@ namespace AspNetMVC_P324.Data
                 Description = "Email tekrarlana bilmez"
             };
         }
+
+        public override IdentityError PasswordMismatch()
+        {
+            return new IdentityError
+            {
+                Code = nameof(PasswordMismatch),
+                Description = "Password dogru deyil"
+            };
+        }
     }
 }

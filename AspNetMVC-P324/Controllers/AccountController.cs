@@ -1,7 +1,9 @@
 ﻿using AspNetMVC_P324.Models.IdentityModels;
 using AspNetMVC_P324.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.VisualBasic;
 using NuGet.Protocol;
 
 namespace AspNetMVC_P324.Controllers
@@ -121,6 +123,46 @@ namespace AspNetMVC_P324.Controllers
 
         public async Task<IActionResult> Logout()
         {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction(nameof(Login));
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var existUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            if (existUser == null)
+                return BadRequest();
+
+            var result = await _userManager.ChangePasswordAsync(existUser, model.CurrentPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                return View();
+            }
+
             await _signInManager.SignOutAsync();
 
             return RedirectToAction(nameof(Login));
