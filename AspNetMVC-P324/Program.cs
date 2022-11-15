@@ -2,6 +2,7 @@ using AspNetMVC_P324.Areas.AdminPanel.Data;
 using AspNetMVC_P324.DAL;
 using AspNetMVC_P324.Data;
 using AspNetMVC_P324.Models.IdentityModels;
+using AspNetMVC_P324.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -40,7 +41,10 @@ namespace AspNetMVC_P324
                 .AddErrorDescriber<LocalizedIdentityErrorDescriper>();
 
             builder.Services.AddSession(opt => opt.IdleTimeout = TimeSpan.FromMinutes(10));
-            
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
+            builder.Services.AddTransient<IMailService, MailManager>();
+
             Constants.RootPath = builder.Environment.WebRootPath;
 
             var app = builder.Build();

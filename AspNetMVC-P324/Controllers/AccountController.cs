@@ -1,5 +1,8 @@
-﻿using AspNetMVC_P324.Models.IdentityModels;
+﻿using AspNetMVC_P324.Data;
+using AspNetMVC_P324.Models;
+using AspNetMVC_P324.Models.IdentityModels;
 using AspNetMVC_P324.Models.ViewModels;
+using AspNetMVC_P324.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +16,13 @@ namespace AspNetMVC_P324.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        private readonly IMailService _mailManager;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IMailService mailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _mailManager = mailService;
         }
 
 
@@ -166,6 +170,85 @@ namespace AspNetMVC_P324.Controllers
             await _signInManager.SignOutAsync();
 
             return RedirectToAction(nameof(Login));
+        }
+
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgetPassword(ForgetViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Mail yazilmalidir!");
+                return View();
+            }
+
+            var existUser = await _userManager.FindByEmailAsync(model.Email);
+
+            if (existUser == null)
+            {
+                ModelState.AddModelError("", "Bele email movcud deyil");
+                return View();
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(existUser);
+
+            var resetLink = Url.Action(
+                nameof(ResetPassword), 
+                "Account", 
+                new { email = model.Email, token }, 
+                Request.Scheme,
+                Request.Host.ToString());
+
+            var mailRequest = new RequestEmail
+            {
+                ToEmail = model.Email,
+                Body = resetLink,
+                Subject = "Reset link"
+            };
+
+            await _mailManager.SendEmailAsync(mailRequest);
+
+            return RedirectToAction(nameof(Login));
+        }
+
+        public IActionResult ResetPassword(string email, string token)
+        {
+            return View(new ResetPasswordViewModel { Email = email, Token = token });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Duz doldurulmalidir");
+                return View();
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+                return BadRequest();
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View();
         }
     }
 }

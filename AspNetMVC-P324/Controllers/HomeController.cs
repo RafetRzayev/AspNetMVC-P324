@@ -1,6 +1,7 @@
 ﻿using AspNetMVC_P324.DAL;
 using AspNetMVC_P324.Models.Entities;
 using AspNetMVC_P324.Models.ViewModels;
+using AspNetMVC_P324.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -10,15 +11,15 @@ namespace AspNetMVC_P324.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext _dbContext;
-
-        public HomeController(AppDbContext dbContext)
+        private readonly IMailService _mailService;
+        public HomeController(AppDbContext dbContext, IMailService mailService)
         {
             _dbContext = dbContext;
+            _mailService = mailService;
         }
 
         public async Task<IActionResult> Index()
         {
-
             HttpContext.Session.SetString("session", "Hello");
             Response.Cookies.Append("cookie", "P324", new CookieOptions { Expires = DateTimeOffset.Now.AddHours(1) });
 
